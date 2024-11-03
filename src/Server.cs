@@ -15,7 +15,7 @@ sock.Receive(buffer);
 
 var bufferStringify = Encoding.UTF8.GetString(buffer);
 Console.WriteLine(bufferStringify.Split(" ")[1]);
-var path = bufferStringify.Split(" ")[1].Split("/")[0];
+var path = bufferStringify.Split(" ")[1].Substring(1);
 
 if (path.Length > 0) {
     sock.Send(System.Text.Encoding.UTF8.GetBytes("HTTP/1.1 404 Not Found\r\n\r\n"));
