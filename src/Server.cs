@@ -9,4 +9,8 @@ TcpListener server = new TcpListener(IPAddress.Any, 4221);
 server.Start();
 var sock = server.AcceptSocket(); // wait for client
 
+var buffer = new byte[1024];
+sock.Receive(buffer);
+Console.WriteLine(buffer.ToString());
+
 sock.Send(System.Text.Encoding.UTF8.GetBytes("HTTP/1.1 200 OK\r\n\r\n"));
