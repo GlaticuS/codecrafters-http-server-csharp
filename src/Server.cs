@@ -14,6 +14,7 @@ var buffer = new byte[1024];
 sock.Receive(buffer);
 
 var bufferStringify = Encoding.UTF8.GetString(buffer);
+Console.WriteLine(bufferStringify);
 var path = bufferStringify.Split(" ")[1].Split("/")[0];
 
 if (path.Length > 0) {
