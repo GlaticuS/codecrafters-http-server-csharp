@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 // You can use print statements as follows for debugging, they'll be visible when running tests.
 Console.WriteLine("Logs from your program will appear here!");
@@ -12,7 +13,7 @@ var sock = server.AcceptSocket(); // wait for client
 var buffer = new byte[1024];
 sock.Receive(buffer);
 
-var bufferStringify = buffer.ToString();
+var bufferStringify = Encoding.UTF8.GetString(buffer);
 var path = bufferStringify.Split(" ")[1].Split("/")[0];
 
 if (path.Length > 0) {
