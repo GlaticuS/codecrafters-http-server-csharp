@@ -14,13 +14,22 @@ var buffer = new byte[1024];
 sock.Receive(buffer);
 
 var bufferStringify = Encoding.UTF8.GetString(buffer);
-string path = bufferStringify.Split(" ")[1][1..];
+string URL = bufferStringify.Split(" ")[1][1..];
 
-if (path.Length > 0) {
-    sock.Send(System.Text.Encoding.UTF8.GetBytes("HTTP/1.1 404 Not Found\r\n\r\n"));
-} else {
-    sock.Send(System.Text.Encoding.UTF8.GetBytes("HTTP/1.1 200 OK\r\n\r\n"));
-}
+string[] splittedURL = URL.Split('/');
+
+string command = splittedURL[1];
+Console.WriteLine(command);
+
+//if (path.Length == 0) {
+//    sock.Send(System.Text.Encoding.UTF8.GetBytes("HTTP/1.1 200 OK\r\n\r\n"));
+    
+//} else if (path == "echo") {
+
+//}
+//else {
+//    sock.Send(System.Text.Encoding.UTF8.GetBytes("HTTP/1.1 404 Not Found\r\n\r\n"));
+//}
 
 
 
