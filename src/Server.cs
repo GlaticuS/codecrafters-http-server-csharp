@@ -1,11 +1,11 @@
 using codecrafters_http_server.src.Controllers;
-using codecrafters_http_server.src.Router;
+using codecrafters_http_server.src.Routing;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace codecrafters_http_server
+namespace codecrafters_http_server.src
 {
     internal class Program
     {
