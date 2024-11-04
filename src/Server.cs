@@ -1,5 +1,3 @@
-using codecrafters_http_server.src.Controllers;
-using codecrafters_http_server.src.Routing;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
