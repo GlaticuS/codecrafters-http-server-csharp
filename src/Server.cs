@@ -19,20 +19,24 @@ string URL = bufferStringify.Split(" ")[1];
 
 string[] splittedURL = URL.Split('/', StringSplitOptions.RemoveEmptyEntries);
 
-string path = splittedURL[0];
-string parameter = null;
+
+string? path = splittedURL.Length > 0 ? splittedURL[0] : null;
+string parameter = "";
 if (splittedURL.Length > 1)
+{
     parameter = splittedURL[1];
+}
 
-
-if (path.Length == 0)
+if (path is null)
 {
     sock.Send(System.Text.Encoding.UTF8.GetBytes("HTTP/1.1 200 OK\r\n\r\n"));
 
 }
 else if (path == "echo")
 {
-
+    sock.Send(System.Text.Encoding.UTF8.GetBytes(
+        $"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {parameter.Length}\r\n\r\n{parameter}")
+    );
 }
 else
 {
