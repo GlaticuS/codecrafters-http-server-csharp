@@ -12,7 +12,7 @@ namespace codecrafters_http_server.src.Controllers
         [Route("/user-agent")]
         public HttpResult GetUserAgent(HttpContext context)
         {
-            return new HttpResult(context.headers["User-Agent"], "200");
+            return new HttpResult(context.Headers["User-Agent"], "200");
         }
     }
 }

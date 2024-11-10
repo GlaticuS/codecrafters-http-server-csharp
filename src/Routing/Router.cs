@@ -29,11 +29,11 @@ namespace codecrafters_http_server.src.Routing
 
         public HttpResult? HandleRequest(HttpContext context)
         {
-            var matchedRoute = _routes.FirstOrDefault(route => UrlMatchesTemplate(context.url, route.Key));
+            var matchedRoute = _routes.FirstOrDefault(route => UrlMatchesTemplate(context.Path, route.Key));
 
             if (matchedRoute.Value.Method != null)
             {
-                var parameters = ExtractParametersFromUrl(matchedRoute.Value.Method, context.url, matchedRoute.Value.Template);
+                var parameters = ExtractParametersFromUrl(matchedRoute.Value.Method, context.Path, matchedRoute.Value.Template);
 
                 var instance = Activator.CreateInstance(matchedRoute.Value.Method.DeclaringType!);
                 return matchedRoute.Value.Method.Invoke(instance, [context, .. parameters]) as HttpResult;

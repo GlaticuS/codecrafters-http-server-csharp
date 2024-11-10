@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace codecrafters_http_server.src.Routing
 {
-    public class HttpContext(string url, string method, Dictionary<string, string> headers)
+    public class HttpContext(string path, string method, Dictionary<string, string> headers)
     {
-        public string url = url; 
-        public string method = method;
-        public Dictionary<string, string> headers = headers;
+        public string Path { get; set; } = path;
+        public string Method { get; set; } = method;
+        public Dictionary<string, string> Headers { get; set; } = headers;
     }
 }
