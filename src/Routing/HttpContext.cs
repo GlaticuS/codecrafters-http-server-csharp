@@ -8,8 +8,8 @@ namespace codecrafters_http_server.src.Routing
 {
     public class HttpContext(string path, string method, Dictionary<string, string> headers)
     {
-        public string Path { get; set; } = path;
-        public string Method { get; set; } = method;
-        public Dictionary<string, string> Headers { get; set; } = headers;
+        public string Path { get; private set; } = path;
+        public string Method { get; private set; } = method;
+        public Dictionary<string, string> Headers { get; private set; } = headers;
     }
 }

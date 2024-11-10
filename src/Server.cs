@@ -47,13 +47,13 @@ namespace codecrafters_http_server.src
             HttpContext context = new HttpContext(path, method, headers);
             HttpResult? response = router.HandleRequest(context);
 
-            if (response?.message != null)
+            if (response?.Value != null)
             {
                 networkStream.Write(Encoding.UTF8.GetBytes(
-                    $"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {response.message.Length}\r\n\r\n{response.message}")
+                    $"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {response.Value.Length}\r\n\r\n{response.Value}")
                 );
             }
-            else if (response?.message == null && response?.code == "200")
+            else if (response?.Value == null && response?.Code == "200")
             {
                 networkStream.Write(Encoding.UTF8.GetBytes("HTTP/1.1 200 OK\r\n\r\n"));
             }
