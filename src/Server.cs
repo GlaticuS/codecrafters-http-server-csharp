@@ -86,11 +86,11 @@ namespace codecrafters_http_server.src
                 sock.Send(Encoding.UTF8.GetBytes("HTTP/1.1 404 Not Found\r\n\r\n"));
             }
 
-            string[] splittedURL = URL.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            //string[] splittedURL = URL.Split('/', StringSplitOptions.RemoveEmptyEntries);
 
 
-            string? path = splittedURL.Length > 0 ? splittedURL[0] : null;
-            string parameter = "";
+            //string? path = splittedURL.Length > 0 ? splittedURL[0] : null;
+            //string parameter = "";
             //if (splittedURL.Length > 1)
             //{
             //    parameter = splittedURL[1];

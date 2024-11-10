@@ -10,7 +10,7 @@ namespace codecrafters_http_server.src
     internal class DefaultController
     {
         [Route("/")]
-        public HttpResult GetDefault(HttpContext context, string message)
+        public HttpResult GetDefault(HttpContext context)
         {
             return new HttpResult("", "200");
         }
