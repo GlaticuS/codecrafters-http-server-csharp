@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace codecrafters_http_server.src.Controllers
 {
-    internal class UserAgentController
+    internal class UserAgentController : IController
     {
         [Route("/user-agent")]
         public HttpResult GetUserAgent(HttpResponseContext context)

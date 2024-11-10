@@ -1,4 +1,5 @@
-﻿using codecrafters_http_server.src.HttpResults;
+﻿using codecrafters_http_server.src.Controllers;
+using codecrafters_http_server.src.HttpResults;
 using codecrafters_http_server.src.Routing;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace codecrafters_http_server.src
 {
-    internal class DefaultController
+    internal class DefaultController : IController
     {
         [Route("/")]
         public HttpResult GetDefault(HttpResponseContext context)

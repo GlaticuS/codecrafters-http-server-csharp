@@ -8,14 +8,23 @@ using System.Threading.Tasks;
 
 namespace codecrafters_http_server.src.Controllers
 {
-    internal class FilesController
+    internal class FilesController : IController
     {
+        public string Directory { get; }
+
+        public FilesController(string path)
+        {
+            Directory = path;
+        }
+
         [Route("/files/{filename}")]
         public HttpResult GetFile(HttpResponseContext context, string filename)
         {
-            if (File.Exists(filename))
+            string fullPath = Path.Join(Directory, filename);
+
+            if (File.Exists(fullPath))
             {
-                string content = File.ReadAllText(filename);
+                string content = File.ReadAllText(fullPath);
                 context.ContentType = "application/octet-stream";
 
                 return HttpResult.Ok(content);

@@ -15,11 +15,15 @@ namespace codecrafters_http_server.src
     {
         private static void Main(string[] args)
         {
+            string path = string.Empty;
+            if (args.Length >= 2 && args[0] == "--directory")
+                path = args[1];
+
             var router = new Router();
-            router.Register(typeof(EchoController));
-            router.Register(typeof(DefaultController));
-            router.Register(typeof(UserAgentController));
-            router.Register(typeof(FilesController));
+            router.Register(new EchoController());
+            router.Register(new DefaultController());
+            router.Register(new UserAgentController());
+            router.Register(new FilesController(path));
 
             // You can use print statements as follows for debugging, they'll be visible when running tests.
             //Console.WriteLine("Logs from your program will appear here!");

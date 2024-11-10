@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace codecrafters_http_server.src.Controllers
 {
-    internal class EchoController
+    internal class EchoController : IController
     {
         [Route("/echo/{message}")]
         public HttpResult GetEcho(HttpResponseContext context, string message)

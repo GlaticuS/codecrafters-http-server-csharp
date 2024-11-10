@@ -1,4 +1,5 @@
-﻿using codecrafters_http_server.src.HttpResults;
+﻿using codecrafters_http_server.src.Controllers;
+using codecrafters_http_server.src.HttpResults;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,21 +12,21 @@ namespace codecrafters_http_server.src.Routing
 {
     public class Router
     {
-        private readonly Dictionary<string, (MethodInfo Method, string Template)> _routes = new();
+        private readonly Dictionary<string, (IController Instance, MethodInfo Method, string Template)> _routes = new();
 
-        public void Register(Type type)
+        public void Register(IController controller)
         {
-            var methods = type.GetMethods().Where(m => m.GetCustomAttribute<RouteAttribute>() != null);
+            var methods = controller.GetType().GetMethods().Where(m => m.GetCustomAttribute<RouteAttribute>() != null);
 
             foreach (var method in methods)
-                RegisterEndpointMethod(method);
+                RegisterEndpointMethod(controller, method);
         }
 
-        private void RegisterEndpointMethod(MethodInfo method)
+        private void RegisterEndpointMethod(IController instance, MethodInfo method)
         {
             var routeAttribute = method.GetCustomAttribute<RouteAttribute>();
             if (routeAttribute != null)
-                _routes[routeAttribute.Template] = (method, routeAttribute.Template);
+                _routes[routeAttribute.Template] = (instance, method, routeAttribute.Template);
         }
 
         public HttpResult? HandleRequest(HttpResponseContext context)
@@ -36,7 +37,7 @@ namespace codecrafters_http_server.src.Routing
             {
                 var parameters = ExtractParametersFromUrl(matchedRoute.Value.Method, context.RequestContext.Path, matchedRoute.Value.Template);
 
-                var instance = Activator.CreateInstance(matchedRoute.Value.Method.DeclaringType!);
+                var instance = matchedRoute.Value.Instance;
                 return matchedRoute.Value.Method.Invoke(instance, [context, .. parameters]) as HttpResult;
             }
 
