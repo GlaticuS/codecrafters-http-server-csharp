@@ -9,6 +9,6 @@ namespace codecrafters_http_server.src.HttpResults
     internal interface IHttpResult
     {
         public int StatusCode { get; }
-        public string Value { get; }
+        public string? Value { get; }
     }
 }
