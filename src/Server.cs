@@ -59,7 +59,17 @@ namespace codecrafters_http_server.src
                 headers[header] = value; // TODO: should be case-insensitive.
             }
 
-            HttpRequestContext requestContext = new HttpRequestContext(path, method, headers);
+            string body = string.Empty;
+            if (headers.ContainsKey("Content-Length"))
+            {
+                reader.ReadLine();
+                int contentLength = int.Parse(headers["Content-Length"]); 
+                byte[] buffer = new byte[contentLength];
+                networkStream.Read(buffer, 0, contentLength);
+                body = Encoding.UTF8.GetString(buffer);
+            }
+
+            HttpRequestContext requestContext = new HttpRequestContext(path, method, headers, body);
             HttpResponseContext responseContext = new HttpResponseContext(requestContext);
             HttpResult? result = router.HandleRequest(responseContext);
 

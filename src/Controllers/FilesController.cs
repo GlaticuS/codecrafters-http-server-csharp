@@ -36,7 +36,7 @@ namespace codecrafters_http_server.src.Controllers
             }
             else if (context.RequestContext.Method == "POST")
             {
-                File.WriteAllText(fullPath, context.Body);
+                File.WriteAllText(fullPath, context.RequestContext.Body);
 
                 return HttpResult.Created();
             }
