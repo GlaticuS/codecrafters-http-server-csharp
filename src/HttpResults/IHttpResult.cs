@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace codecrafters_http_server.src.Controllers
+namespace codecrafters_http_server.src.HttpResults
 {
-    internal interface IHttpResult<T> where T : class
+    internal interface IHttpResult
     {
         public int StatusCode { get; }
-        public T Value { get; }
+        public string Value { get; }
     }
 }

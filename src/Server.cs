@@ -1,4 +1,5 @@
 using codecrafters_http_server.src.Controllers;
+using codecrafters_http_server.src.HttpResults;
 using codecrafters_http_server.src.Routing;
 using Microsoft.VisualBasic;
 using System.Net;
@@ -53,7 +54,7 @@ namespace codecrafters_http_server.src
                     $"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {response.Value.Length}\r\n\r\n{response.Value}")
                 );
             }
-            else if (response?.Value == null && response?.Code == "200")
+            else if (response?.Value == null && response?.StatusCode == 200)
             {
                 networkStream.Write(Encoding.UTF8.GetBytes("HTTP/1.1 200 OK\r\n\r\n"));
             }

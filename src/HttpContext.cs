@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace codecrafters_http_server.src.Routing
+namespace codecrafters_http_server.src
 {
     public class HttpContext(string path, string method, Dictionary<string, string> headers)
     {

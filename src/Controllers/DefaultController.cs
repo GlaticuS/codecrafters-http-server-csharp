@@ -1,4 +1,5 @@
-﻿using codecrafters_http_server.src.Routing;
+﻿using codecrafters_http_server.src.HttpResults;
+using codecrafters_http_server.src.Routing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace codecrafters_http_server.src
         [Route("/")]
         public HttpResult GetDefault(HttpContext context)
         {
-            return new HttpResult("", "200");
+            return HttpResult.Ok("");
         }
     }
 }

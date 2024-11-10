@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace codecrafters_http_server.src.Routing
+namespace codecrafters_http_server.src.HttpResults
 {
-    public class HttpResult(string value, int code)
+    public class HttpResult(string value, int statusCode) : IHttpResult
     {
-        public int Code { get; private set; } = code;
+        public int StatusCode { get; private set; } = statusCode;
         public string Value { get; private set; } = value;
 
         public static HttpResult Ok(string value)

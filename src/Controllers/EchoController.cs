@@ -1,4 +1,5 @@
-﻿using codecrafters_http_server.src.Routing;
+﻿using codecrafters_http_server.src.HttpResults;
+using codecrafters_http_server.src.Routing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace codecrafters_http_server.src.Controllers
         [Route("/echo/{message}")]
         public HttpResult GetEcho(HttpContext context, string message)
         {
-            return new HttpResult(message, "200");
+            return HttpResult.Ok(message);
         }
     }
 }
