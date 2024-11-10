@@ -18,19 +18,31 @@ namespace codecrafters_http_server.src.Controllers
         }
 
         [Route("/files/{filename}")]
-        public HttpResult GetFile(HttpResponseContext context, string filename)
+        public HttpResult ProcessFile(HttpResponseContext context, string filename)
         {
             string fullPath = Path.Join(Directory, filename);
 
-            if (File.Exists(fullPath))
+            if (context.RequestContext.Method == "GET")
             {
-                string content = File.ReadAllText(fullPath);
-                context.ContentType = "application/octet-stream";
+                if (File.Exists(fullPath))
+                {
+                    string content = File.ReadAllText(fullPath);
+                    context.ContentType = "application/octet-stream";
 
-                return HttpResult.Ok(content);
+                    return HttpResult.Ok(content);
+                }
+
+                return HttpResult.NotFound();
+            }
+            else if (context.RequestContext.Method == "POST")
+            {
+                File.WriteAllText(fullPath, context.Body);
+
+                return HttpResult.Created();
             }
 
             return HttpResult.NotFound();
+
         }
     }
 }

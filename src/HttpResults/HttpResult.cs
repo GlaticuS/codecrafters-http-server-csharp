@@ -16,6 +16,11 @@ namespace codecrafters_http_server.src.HttpResults
             return new HttpResult(value, 200);
         }
 
+        internal static HttpResult Created()
+        {
+            return new HttpResult("", 201);
+        }
+
         internal static HttpResult NotFound()
         {
             return new HttpResult(null, 404);
