@@ -10,9 +10,9 @@ namespace codecrafters_http_server.src.Controllers
     internal class EchoController
     {
         [Route("/echo/{message}")]
-        public string GetEcho(string message)
+        public HttpResult GetEcho(HttpContext context, string message)
         {
-            return message;
+            return new HttpResult(message, "200");
         }
     }
 }
