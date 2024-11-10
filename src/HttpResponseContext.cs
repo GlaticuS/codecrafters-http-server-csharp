@@ -31,6 +31,7 @@ namespace codecrafters_http_server.src
         public HttpResponseContext(HttpRequestContext request)
         {
             RequestContext = request;
+            ContentType = "text/plain";
         }
     }
 }
