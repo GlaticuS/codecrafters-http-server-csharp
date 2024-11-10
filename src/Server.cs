@@ -19,6 +19,7 @@ namespace codecrafters_http_server.src
             router.Register(typeof(EchoController));
             router.Register(typeof(DefaultController));
             router.Register(typeof(UserAgentController));
+            router.Register(typeof(FilesController));
 
             // You can use print statements as follows for debugging, they'll be visible when running tests.
             //Console.WriteLine("Logs from your program will appear here!");
@@ -54,23 +55,36 @@ namespace codecrafters_http_server.src
                 headers[header] = value; // TODO: should be case-insensitive.
             }
 
-            HttpContext context = new HttpContext(path, method, headers);
-            HttpResult? response = router.HandleRequest(context);
+            HttpRequestContext requestContext = new HttpRequestContext(path, method, headers);
+            HttpResponseContext responseContext = new HttpResponseContext(requestContext);
+            HttpResult? result = router.HandleRequest(responseContext);
 
-            if (response?.Value != null)
-            {
-                networkStream.Write(Encoding.UTF8.GetBytes(
-                    $"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {response.Value.Length}\r\n\r\n{response.Value}")
-                );
-            }
-            else if (response?.Value == null && response?.StatusCode == 200)
-            {
-                networkStream.Write(Encoding.UTF8.GetBytes("HTTP/1.1 200 OK\r\n\r\n"));
-            }
+            if (result == null) // No handler - 404.
+                responseContext.StatusCode = 404;
             else
             {
-                networkStream.Write(Encoding.UTF8.GetBytes("HTTP/1.1 404 Not Found\r\n\r\n"));
+                responseContext.StatusCode = result.StatusCode;
+                
+                if (!string.IsNullOrEmpty(result.Value))
+                {
+                    responseContext.Body = result.Value;
+                    responseContext.Headers["Content-Length"] = responseContext.Body.Length.ToString();
+                }
             }
+
+            StringBuilder response = new StringBuilder();
+            response.AppendLine($"HTTP/1.1 {responseContext.Status}");
+            foreach (KeyValuePair<string, string> pair in responseContext.Headers)
+                if (!string.IsNullOrEmpty(pair.Value))
+                    response.AppendLine($"{pair.Key}: {pair.Value}");
+
+            if (!string.IsNullOrEmpty(responseContext.Body))
+            {
+                response.AppendLine();
+                response.AppendLine(responseContext.Body);
+            }
+
+            networkStream.Write(Encoding.UTF8.GetBytes(response.ToString()));
 
             client.Close();
         }

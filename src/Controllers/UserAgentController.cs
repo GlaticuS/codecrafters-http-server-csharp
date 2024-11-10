@@ -11,9 +11,9 @@ namespace codecrafters_http_server.src.Controllers
     internal class UserAgentController
     {
         [Route("/user-agent")]
-        public HttpResult GetUserAgent(HttpContext context)
+        public HttpResult GetUserAgent(HttpResponseContext context)
         {
-            return HttpResult.Ok(context.Headers["User-Agent"]);
+            return HttpResult.Ok(context.RequestContext.Headers["User-Agent"]);
         }
     }
 }

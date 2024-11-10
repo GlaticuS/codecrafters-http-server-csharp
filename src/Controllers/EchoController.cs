@@ -11,7 +11,7 @@ namespace codecrafters_http_server.src.Controllers
     internal class EchoController
     {
         [Route("/echo/{message}")]
-        public HttpResult GetEcho(HttpContext context, string message)
+        public HttpResult GetEcho(HttpResponseContext context, string message)
         {
             return HttpResult.Ok(message);
         }

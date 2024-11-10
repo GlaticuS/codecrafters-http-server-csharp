@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace codecrafters_http_server.src
 {
-    public class HttpContext(string path, string method, Dictionary<string, string> headers)
+    public class HttpRequestContext(string path, string method, Dictionary<string, string> headers)
     {
         public string Path { get; private set; } = path;
         public string Method { get; private set; } = method;

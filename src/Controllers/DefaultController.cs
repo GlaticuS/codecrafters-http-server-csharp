@@ -11,8 +11,9 @@ namespace codecrafters_http_server.src
     internal class DefaultController
     {
         [Route("/")]
-        public HttpResult GetDefault(HttpContext context)
+        public HttpResult GetDefault(HttpResponseContext context)
         {
+            context.ContentType = "";
             return HttpResult.Ok("");
         }
     }
