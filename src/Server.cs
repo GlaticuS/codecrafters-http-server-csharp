@@ -73,15 +73,15 @@ namespace codecrafters_http_server.src
             }
 
             StringBuilder response = new StringBuilder();
-            response.AppendLine($"HTTP/1.1 {responseContext.Status}");
+            response.AppendHttpLine($"HTTP/1.1 {responseContext.Status}");
             foreach (KeyValuePair<string, string> pair in responseContext.Headers)
                 if (!string.IsNullOrEmpty(pair.Value))
-                    response.AppendLine($"{pair.Key}: {pair.Value}");
+                    response.AppendHttpLine($"{pair.Key}: {pair.Value}");
 
             if (!string.IsNullOrEmpty(responseContext.Body))
             {
-                response.AppendLine();
-                response.AppendLine(responseContext.Body);
+                response.AppendHttpLine();
+                response.AppendHttpLine(responseContext.Body);
             }
 
             networkStream.Write(Encoding.UTF8.GetBytes(response.ToString()));
