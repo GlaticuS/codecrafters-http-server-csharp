@@ -64,7 +64,7 @@ namespace codecrafters_http_server.src
             else
             {
                 responseContext.StatusCode = result.StatusCode;
-                
+
                 if (!string.IsNullOrEmpty(result.Value))
                 {
                     responseContext.Body = result.Value;
@@ -77,15 +77,12 @@ namespace codecrafters_http_server.src
             foreach (KeyValuePair<string, string> pair in responseContext.Headers)
                 if (!string.IsNullOrEmpty(pair.Value))
                     response.AppendHttpLine($"{pair.Key}: {pair.Value}");
+            response.AppendHttpLine();
 
             if (!string.IsNullOrEmpty(responseContext.Body))
-            {
-                response.AppendHttpLine();
                 response.AppendHttpLine(responseContext.Body);
-            }
 
             networkStream.Write(Encoding.UTF8.GetBytes(response.ToString()));
-
             client.Close();
         }
     }
