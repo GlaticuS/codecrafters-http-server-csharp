@@ -13,10 +13,15 @@ namespace codecrafters_http_server.src.Controllers
         [Route("/files/{filename}")]
         public HttpResult GetFile(HttpResponseContext context, string filename)
         {
-            string content = File.ReadAllText(filename);
-            context.ContentType = "application/octet-stream";
+            if (File.Exists(filename))
+            {
+                string content = File.ReadAllText(filename);
+                context.ContentType = "application/octet-stream";
 
-            return HttpResult.Ok(content);
+                return HttpResult.Ok(content);
+            }
+
+            return HttpResult.NotFound();
         }
     }
 }
