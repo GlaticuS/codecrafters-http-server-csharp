@@ -2,6 +2,7 @@ using codecrafters_http_server.src.Controllers;
 using codecrafters_http_server.src.HttpResults;
 using codecrafters_http_server.src.Routing;
 using Microsoft.VisualBasic;
+using System.Diagnostics.Metrics;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
@@ -25,9 +26,17 @@ namespace codecrafters_http_server.src
             // Uncomment this block to pass the first stage
             TcpListener server = new TcpListener(IPAddress.Any, 4221);
             server.Start();
-            var tcpRequest = server.AcceptTcpClient(); // Wait for client.
+            while (true)
+            {
+                var tcpRequest = server.AcceptTcpClient(); // Wait for client.
+                Thread thread = new Thread(() => { HandleConnection(router, tcpRequest); });
+                thread.Start();
+            }
+        }
 
-            var networkStream = tcpRequest.GetStream();
+        private static void HandleConnection(Router router, TcpClient client)
+        {
+            var networkStream = client.GetStream();
             using var reader = new StreamReader(networkStream, Encoding.UTF8);
 
             string[] firstLine = reader.ReadLine()!.Split(' ');
@@ -63,31 +72,7 @@ namespace codecrafters_http_server.src
                 networkStream.Write(Encoding.UTF8.GetBytes("HTTP/1.1 404 Not Found\r\n\r\n"));
             }
 
-            //string[] splittedURL = URL.Split('/', StringSplitOptions.RemoveEmptyEntries);
-
-
-            //string? path = splittedURL.Length > 0 ? splittedURL[0] : null;
-            //string parameter = "";
-            //if (splittedURL.Length > 1)
-            //{
-            //    parameter = splittedURL[1];
-            //}
-
-            //if (path is null)
-            //{
-            //    sock.Send(Encoding.UTF8.GetBytes("HTTP/1.1 200 OK\r\n\r\n"));
-
-            //}
-            //else if (path == "echo")
-            //{
-            //    sock.Send(Encoding.UTF8.GetBytes(
-            //        $"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {parameter.Length}\r\n\r\n{parameter}")
-            //    );
-            //}
-            //else
-            //{
-            //    sock.Send(Encoding.UTF8.GetBytes("HTTP/1.1 404 Not Found\r\n\r\n"));
-            //}
+            client.Close();
         }
     }
 }
