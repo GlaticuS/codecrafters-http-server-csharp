@@ -34,7 +34,15 @@ namespace codecrafters_http_server.src
             while (true)
             {
                 var tcpRequest = server.AcceptTcpClient(); // Wait for client.
-                Thread thread = new Thread(() => { HandleConnection(router, tcpRequest); });
+                Thread thread = new Thread(() => {
+                    try
+                    {
+                        HandleConnection(router, tcpRequest);
+                    }
+                    catch (Exception ex) { 
+                        Console.WriteLine(ex.ToString());
+                    }
+                });
                 thread.Start();
             }
         }
@@ -63,11 +71,10 @@ namespace codecrafters_http_server.src
             string? contentLengthHeader = headers.Keys.FirstOrDefault(h => h.ToLower() == "content-length");
             if (contentLengthHeader != null)
             {
-                reader.ReadLine();
                 int contentLength = int.Parse(headers[contentLengthHeader]); 
-                byte[] buffer = new byte[contentLength];
-                networkStream.Read(buffer, 0, contentLength);
-                body = Encoding.UTF8.GetString(buffer);
+                char[] buffer = new char[contentLength];
+                reader.ReadBlock(buffer, 0, contentLength);
+                body = new string(buffer);
             }
 
             HttpRequestContext requestContext = new HttpRequestContext(path, method, headers, body);
