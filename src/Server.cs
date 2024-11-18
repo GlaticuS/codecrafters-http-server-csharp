@@ -108,7 +108,7 @@ namespace codecrafters_http_server.src
                         byte[] bodyBuffer = Encoding.UTF8.GetBytes(result.Value);
 
                         MemoryStream compressedStream = new MemoryStream();
-                        GZipStream compressor = new GZipStream(compressedStream, CompressionLevel.SmallestSize);
+                        GZipStream compressor = new GZipStream(compressedStream, CompressionMode.Compress);
                         compressor.Write(bodyBuffer, 0, bodyBuffer.Length);
                         compressor.Flush();
                         compressedStream.Position = 0;
