@@ -70,17 +70,17 @@ namespace codecrafters_http_server.src
                 headers[header] = value; // TODO: should be case-insensitive.
             }
 
-            string? compressMode = null;
+            HashSet<string> encodings = [];
             if (headers.ContainsKey("Accept-Encoding"))
             {
-                compressMode = headers["Accept-Encoding"];
+                encodings = headers["Accept-Encoding"].Split(", ").ToHashSet();
             }
 
             string body = string.Empty;
             string? contentLengthHeader = headers.Keys.FirstOrDefault(h => h.ToLower() == "content-length");
             if (contentLengthHeader != null)
             {
-                if (compressMode == "gzip")
+                if (encodings.Contains("gzip"))
                 {
                     var decompressor = new GZipStream(networkStream, CompressionMode.Compress);
                     using var sr = new StreamReader(decompressor);
@@ -111,7 +111,7 @@ namespace codecrafters_http_server.src
                     responseContext.Body = result.Value;
                     responseContext.Headers["Content-Length"] = responseContext.Body.Length.ToString();
 
-                    if (compressMode == "gzip")
+                    if (encodings.Contains("gzip"))
                     {
                         responseContext.Headers["Content-Encoding"] = requestContext.Headers["Accept-Encoding"];
                     }
