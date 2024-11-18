@@ -26,7 +26,7 @@ namespace codecrafters_http_server.src
                 Headers["Content-Type"] = value;
             }
         }
-        public string Body { get; set; } = string.Empty;
+        public byte[]? Body { get; set; }
 
         public HttpResponseContext(HttpRequestContext request)
         {

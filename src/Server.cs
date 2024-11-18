@@ -82,7 +82,7 @@ namespace codecrafters_http_server.src
             {
                 if (encodings.Contains("gzip"))
                 {
-                    var decompressor = new GZipStream(networkStream, CompressionMode.Compress);
+                    var decompressor = new GZipStream(networkStream, CompressionMode.Decompress);
                     using var sr = new StreamReader(decompressor);
                     body = sr.ReadToEnd();
                 }
@@ -107,14 +107,22 @@ namespace codecrafters_http_server.src
 
                 if (!string.IsNullOrEmpty(result.Value))
                 {
-
-                    responseContext.Body = result.Value;
-                    responseContext.Headers["Content-Length"] = responseContext.Body.Length.ToString();
-
                     if (encodings.Contains("gzip"))
                     {
+                        MemoryStream bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(result.Value));
+                        var compressor = new GZipStream(bodyStream, CompressionMode.Compress);
+                        MemoryStream outputStream = new MemoryStream();
+                        compressor.CopyTo(outputStream);
+                        outputStream.Position = 0;
+                        responseContext.Body = outputStream.ToArray();
                         responseContext.Headers["Content-Encoding"] = "gzip";
                     }
+                    else
+                    {
+                        responseContext.Body = Encoding.UTF8.GetBytes(result.Value);
+                    }
+
+                    responseContext.Headers["Content-Length"] = responseContext.Body.Length.ToString();
                 }
             }
 
@@ -124,11 +132,12 @@ namespace codecrafters_http_server.src
                 if (!string.IsNullOrEmpty(pair.Value))
                     response.AppendHttpLine($"{pair.Key}: {pair.Value}");
             response.AppendHttpLine();
+            byte[] responseBuffer = Encoding.UTF8.GetBytes(response.ToString());
 
-            if (!string.IsNullOrEmpty(responseContext.Body))
-                response.AppendHttpLine(responseContext.Body);
+            if (responseContext.Body != null && responseContext.Body.Length > 0)
+                responseBuffer = responseBuffer.Concat(responseContext.Body).ToArray();
 
-            networkStream.Write(Encoding.UTF8.GetBytes(response.ToString()));
+            networkStream.Write(responseBuffer);
             client.Close();
         }
     }
