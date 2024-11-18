@@ -80,11 +80,8 @@ namespace codecrafters_http_server.src
             string? contentLengthHeader = headers.Keys.FirstOrDefault(h => h.ToLower() == "content-length");
             if (contentLengthHeader != null)
             {
-
-
                 if (compressMode == "gzip")
                 {
-                    //BinaryReader bodyStream = new BinaryReader(reader);
                     var decompressor = new GZipStream(networkStream, CompressionMode.Compress);
                     using var sr = new StreamReader(decompressor);
                     body = sr.ReadToEnd();
