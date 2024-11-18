@@ -110,7 +110,7 @@ namespace codecrafters_http_server.src
                     if (encodings.Contains("gzip"))
                     {
                         MemoryStream bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(result.Value));
-                        var compressor = new GZipStream(bodyStream, CompressionMode.Compress);
+                        var compressor = new GZipStream(bodyStream, CompressionMode.Decompress);
                         MemoryStream outputStream = new MemoryStream();
                         compressor.CopyTo(outputStream);
                         compressor.Close();
