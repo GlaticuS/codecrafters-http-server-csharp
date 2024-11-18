@@ -82,7 +82,7 @@ namespace codecrafters_http_server.src
             {
 
 
-                if (compressMode != null)
+                if (compressMode == "gzip")
                 {
                     //BinaryReader bodyStream = new BinaryReader(reader);
                     var decompressor = new GZipStream(networkStream, CompressionMode.Compress);
@@ -114,7 +114,7 @@ namespace codecrafters_http_server.src
                     responseContext.Body = result.Value;
                     responseContext.Headers["Content-Length"] = responseContext.Body.Length.ToString();
 
-                    if (compressMode != null)
+                    if (compressMode == "gzip")
                     {
                         responseContext.Headers["Content-Encoding"] = requestContext.Headers["Accept-Encoding"];
                     }
