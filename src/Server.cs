@@ -113,7 +113,7 @@ namespace codecrafters_http_server.src
 
                     if (encodings.Contains("gzip"))
                     {
-                        responseContext.Headers["Content-Encoding"] = requestContext.Headers["Accept-Encoding"];
+                        responseContext.Headers["Content-Encoding"] = "gzip";
                     }
                 }
             }
