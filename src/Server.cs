@@ -108,8 +108,9 @@ namespace codecrafters_http_server.src
                         byte[] bodyBuffer = Encoding.UTF8.GetBytes(result.Value);
 
                         MemoryStream compressedStream = new MemoryStream();
-                        GZipStream compressor = new GZipStream(compressedStream, CompressionMode.Compress);
+                        GZipStream compressor = new GZipStream(compressedStream, CompressionLevel.SmallestSize);
                         compressor.Write(bodyBuffer, 0, bodyBuffer.Length);
+                        compressor.Flush();
                         compressedStream.Position = 0;
 
                         responseContext.Body = compressedStream.ToArray();
@@ -133,7 +134,7 @@ namespace codecrafters_http_server.src
             byte[] responseBuffer = Encoding.UTF8.GetBytes(response.ToString());
 
             if (responseContext.Body != null && responseContext.Body.Length > 0)
-                responseBuffer = responseBuffer.Concat(responseContext.Body).ToArray();
+                responseBuffer = [.. responseBuffer, .. responseContext.Body];
 
             networkStream.Write(responseBuffer);
             client.Close();
