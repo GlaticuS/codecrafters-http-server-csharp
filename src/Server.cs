@@ -3,6 +3,7 @@ using codecrafters_http_server.src.HttpResults;
 using codecrafters_http_server.src.Routing;
 using Microsoft.VisualBasic;
 using System.Diagnostics.Metrics;
+using System.IO.Compression;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
@@ -34,12 +35,14 @@ namespace codecrafters_http_server.src
             while (true)
             {
                 var tcpRequest = server.AcceptTcpClient(); // Wait for client.
-                Thread thread = new Thread(() => {
+                Thread thread = new Thread(() =>
+                {
                     try
                     {
                         HandleConnection(router, tcpRequest);
                     }
-                    catch (Exception ex) { 
+                    catch (Exception ex)
+                    {
                         Console.WriteLine(ex.ToString());
                     }
                 });
@@ -67,14 +70,32 @@ namespace codecrafters_http_server.src
                 headers[header] = value; // TODO: should be case-insensitive.
             }
 
+            string? compressMode = null;
+            if (headers["Accept-Encoding"] is not null)
+            {
+                compressMode = headers["Accept-Encoding"];
+            }
+
             string body = string.Empty;
             string? contentLengthHeader = headers.Keys.FirstOrDefault(h => h.ToLower() == "content-length");
             if (contentLengthHeader != null)
             {
-                int contentLength = int.Parse(headers[contentLengthHeader]); 
-                char[] buffer = new char[contentLength];
-                reader.ReadBlock(buffer, 0, contentLength);
-                body = new string(buffer);
+
+
+                if (compressMode != null)
+                {
+                    //BinaryReader bodyStream = new BinaryReader(reader);
+                    var decompressor = new GZipStream(networkStream, CompressionMode.Compress);
+                    using var sr = new StreamReader(decompressor);
+                    body = sr.ReadToEnd();
+                }
+                else
+                {
+                    int contentLength = int.Parse(headers[contentLengthHeader]);
+                    char[] buffer = new char[contentLength];
+                    reader.Read(buffer, 0, contentLength);
+                    body = new string(buffer);
+                }
             }
 
             HttpRequestContext requestContext = new HttpRequestContext(path, method, headers, body);
@@ -89,6 +110,7 @@ namespace codecrafters_http_server.src
 
                 if (!string.IsNullOrEmpty(result.Value))
                 {
+
                     responseContext.Body = result.Value;
                     responseContext.Headers["Content-Length"] = responseContext.Body.Length.ToString();
                 }
