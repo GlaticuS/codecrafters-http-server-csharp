@@ -71,7 +71,7 @@ namespace codecrafters_http_server.src
             }
 
             string? compressMode = null;
-            if (headers["Accept-Encoding"] is not null)
+            if (headers.ContainsKey("Accept-Encoding"))
             {
                 compressMode = headers["Accept-Encoding"];
             }
