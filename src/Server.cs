@@ -113,6 +113,11 @@ namespace codecrafters_http_server.src
 
                     responseContext.Body = result.Value;
                     responseContext.Headers["Content-Length"] = responseContext.Body.Length.ToString();
+
+                    if (compressMode != null)
+                    {
+                        responseContext.Headers["Content-Encoding"] = requestContext.Headers["Accept-Encoding"];
+                    }
                 }
             }
 
