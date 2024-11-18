@@ -1,14 +1,10 @@
 using codecrafters_http_server.src.Controllers;
 using codecrafters_http_server.src.HttpResults;
 using codecrafters_http_server.src.Routing;
-using Microsoft.VisualBasic;
-using System.Diagnostics.Metrics;
 using System.IO.Compression;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
 using System.Text;
-using static System.Net.WebRequestMethods;
 
 namespace codecrafters_http_server.src
 {
@@ -109,13 +105,15 @@ namespace codecrafters_http_server.src
                 {
                     if (encodings.Contains("gzip"))
                     {
-                        MemoryStream bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(result.Value));
-                        var compressor = new GZipStream(bodyStream, CompressionMode.Decompress);
-                        MemoryStream outputStream = new MemoryStream();
-                        compressor.CopyTo(outputStream);
+                        byte[] bodyBuffer = Encoding.UTF8.GetBytes(result.Value);
+
+                        MemoryStream compressedStream = new MemoryStream();
+                        GZipStream compressor = new GZipStream(compressedStream, CompressionMode.Compress);
+                        compressor.Write(bodyBuffer, 0, bodyBuffer.Length);
                         compressor.Close();
-                        outputStream.Position = 0;
-                        responseContext.Body = outputStream.ToArray();
+                        compressedStream.Position = 0;
+
+                        responseContext.Body = compressedStream.ToArray();
                         responseContext.Headers["Content-Encoding"] = "gzip";
                     }
                     else
