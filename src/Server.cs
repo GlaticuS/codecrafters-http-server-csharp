@@ -111,7 +111,6 @@ namespace codecrafters_http_server.src
                         GZipStream compressor = new GZipStream(compressedStream, CompressionMode.Compress, true);
                         compressor.Write(bodyBuffer, 0, bodyBuffer.Length);
                         compressor.Flush();
-                        compressedStream.Position = 0;
                         compressor.Close();
 
                         responseContext.Body = compressedStream.ToArray();
