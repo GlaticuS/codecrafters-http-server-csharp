@@ -115,14 +115,6 @@ namespace codecrafters_http_server.src
 
                         responseContext.Body = compressedStream.ToArray();
                         responseContext.Headers["Content-Encoding"] = "gzip";
-
-                        StringBuilder builder = new StringBuilder();
-                        foreach(var b in responseContext.Body)
-                        {
-                            builder.Append(b.ToString("x"));
-                        }
-
-                        responseContext.Body = Encoding.UTF8.GetBytes(builder.ToString());
                     }
                     else
                     {
